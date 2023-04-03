@@ -1,7 +1,21 @@
 import { NextApiRequest, NextApiResponse } from "next";
 import openai from "@/lib/openai";
+import { CreateCompletionResponseChoicesInner } from "openai";
 
-const handler = async (req: NextApiRequest, res: NextApiResponse) => {
+export type ResponseType =
+  | {
+      choices: CreateCompletionResponseChoicesInner[];
+      status: "success";
+    }
+  | {
+      error: string;
+      status: "fail";
+    };
+
+const handler = async (
+  req: NextApiRequest,
+  res: NextApiResponse<ResponseType>
+) => {
   const prompt = req.body.prompt as string;
   try {
     const response = await openai.createCompletion({

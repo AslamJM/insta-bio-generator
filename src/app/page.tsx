@@ -16,7 +16,7 @@ export default function Home() {
   const [loading, setLoading] = useState(false);
 
   const generatePrompt = async () => {
-    const promptText = `Write a short and crisp Instagram bio for me with emojis. My pronouns are ${pronouns}. I am a ${profession}. My birthday is ${birthday}. I live in ${place}. My hobbies are ${hobbies
+    const promptText = `Write a crisp Instagram bio for me with emojis and seperator based on the following details. gender:${pronouns}, job:${profession},birthday:${birthday},city:${place},hobbies:${hobbies
       .split(" ")
       .join(" and ")}`;
     setLoading(true);
@@ -24,7 +24,10 @@ export default function Home() {
     try {
       const response = await generateBio(promptText);
 
-      const texts = response.choices.map((ch: any) => ch.text) as string[];
+      const texts =
+        response.status === "success"
+          ? (response.choices.map((ch) => ch.text) as string[])
+          : [];
       setChoises(texts);
     } catch (error) {
       console.log(error);
@@ -44,12 +47,12 @@ export default function Home() {
         <div className="flex items-center justify-center gap-4 my-1">
           <div className="w-1/2">
             <label className="block mb-2 text-md font-medium text-gray-900">
-              Your Pronouns
+              Your Gender
             </label>
             <input
               type="text"
               className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 "
-              placeholder="They / Them"
+              placeholder="Male"
               value={pronouns}
               onChange={(e) => setPronouns(e.target.value)}
             />
